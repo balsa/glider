@@ -141,6 +141,19 @@ class IssuesStream
   }
 }
 
+class IssueCommentsStream
+  extends RepositoryStream
+  implements Stream<RepositoryStreamContext>
+{
+  constructor(parent: OrganizationStream, options: RepositoryStreamOptions) {
+    super(parent, 'issue_comments', options);
+  }
+
+  seed(context: RepositoryStreamContext) {
+    return `${context.url}/issues/comments?sort=updated&direction=desc&per_page=${this.pageSize}`;
+  }
+}
+
 class PullRequestsStream
   extends RepositoryStream
   implements Stream<RepositoryStreamContext>
@@ -151,6 +164,19 @@ class PullRequestsStream
 
   seed(context: RepositoryStreamContext) {
     return `${context.url}/pulls?state=all&sort=updated&direction=desc&per_page=${this.pageSize}`;
+  }
+}
+
+class ReviewCommentsStream
+  extends RepositoryStream
+  implements Stream<RepositoryStreamContext>
+{
+  constructor(parent: OrganizationStream, options: RepositoryStreamOptions) {
+    super(parent, 'review_comments', options);
+  }
+
+  seed(context: RepositoryStreamContext) {
+    return `${context.url}/pulls/comments?sort=updated&direction=desc&per_page=${this.pageSize}`;
   }
 }
 
@@ -191,7 +217,12 @@ export class GitHubSource implements Source {
         orgs: this.options.orgs,
       }),
       new IssuesStream(repositories, { start }),
+      new IssueCommentsStream(repositories, { start }),
       new PullRequestsStream(repositories, { start }),
+      // NOTE(ptr): On inspection, this appears to be a strict subset of issue
+      // comments. Issue comments on PRs seem to include all the review comment
+      // fields, including things like `diff_hunk`. We may not need this.
+      new ReviewCommentsStream(repositories, { start }),
     ];
   }
 
