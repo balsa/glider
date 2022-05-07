@@ -1,6 +1,7 @@
 import { MysqlDestination } from './destinations/mysql';
 import { S3Destination } from './destinations/s3';
 import { StdoutDestination } from './destinations/stdout';
+import { FigmaSource } from './sources/figma';
 import { GitHubSource } from './sources/github';
 import { Source, Destination } from './types';
 
@@ -27,6 +28,7 @@ interface Ctor<T> {
 export function createSourceRegistry(): Registry<Ctor<Source>> {
   const registry = new Registry<Ctor<Source>>();
 
+  registry.register('figma', FigmaSource);
   registry.register('github', GitHubSource);
 
   return registry;
