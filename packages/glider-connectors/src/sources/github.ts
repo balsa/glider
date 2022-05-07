@@ -6,6 +6,7 @@ import type { Source, Stream, Response } from '../types';
 interface Options {
   orgs: string[];
   token: string;
+  start?: string;
 }
 
 function getNextPageUrl(header?: string | string[]): string | null {
@@ -91,14 +92,26 @@ interface RepositoryStreamContext {
   url: string;
 }
 
+interface RepositoryStreamOptions {
+  start?: Date;
+}
+
 interface Timestamped {
   created_at: string;
   updated_at: string;
 }
 
 class RepositoryStream extends GitHubStream {
-  constructor(readonly parent: OrganizationStream, name: string) {
+  private start?: Date;
+
+  constructor(
+    readonly parent: OrganizationStream,
+    name: string,
+    options: RepositoryStreamOptions
+  ) {
     super(name);
+
+    this.start = options.start;
   }
 
   next(response: Response, records: Timestamped[]) {
@@ -107,8 +120,7 @@ class RepositoryStream extends GitHubStream {
     }
 
     const oldest = new Date(records[records.length - 1].updated_at);
-    const cutoff = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
-    if (oldest < cutoff) {
+    if (this.start && oldest < this.start) {
       return null;
     }
 
@@ -120,8 +132,8 @@ class IssuesStream
   extends RepositoryStream
   implements Stream<RepositoryStreamContext>
 {
-  constructor(parent: OrganizationStream) {
-    super(parent, 'issues');
+  constructor(parent: OrganizationStream, options: RepositoryStreamOptions) {
+    super(parent, 'issues', options);
   }
 
   seed(context: RepositoryStreamContext) {
@@ -133,8 +145,8 @@ class PullRequestsStream
   extends RepositoryStream
   implements Stream<RepositoryStreamContext>
 {
-  constructor(parent: OrganizationStream) {
-    super(parent, 'pull_requests');
+  constructor(parent: OrganizationStream, options: RepositoryStreamOptions) {
+    super(parent, 'pull_requests', options);
   }
 
   seed(context: RepositoryStreamContext) {
@@ -159,6 +171,18 @@ export class GitHubSource implements Source {
       orgs: this.options.orgs,
     });
 
+    const start = options.start ? new Date(options.start) : undefined;
+    if (start) {
+      this.logger.info({
+        msg: `Initializing GitHub source with start time of ${start}`,
+        start,
+      });
+    } else {
+      this.logger.info({
+        msg: `Initializing GitHub source with no start time`,
+      });
+    }
+
     this.streams = [
       repositories,
       new OrganizationStream({
@@ -166,8 +190,8 @@ export class GitHubSource implements Source {
         path: 'members',
         orgs: this.options.orgs,
       }),
-      new IssuesStream(repositories),
-      new PullRequestsStream(repositories),
+      new IssuesStream(repositories, { start }),
+      new PullRequestsStream(repositories, { start }),
     ];
   }
 
