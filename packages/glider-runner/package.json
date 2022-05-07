@@ -1,0 +1,28 @@
+{
+  "name": "@glider/runner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Glider job runner",
+  "author": "Balsa, Inc.",
+  "license": "MIT",
+  "main": "app.js",
+  "scripts": {
+    "docker:build": "docker build -t glider-runner -f ./Dockerfile ../..",
+    "start": "docker run --rm glider-runner"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.83.0",
+    "got": "11.8.3",
+    "mysql2": "2.3.3",
+    "pino": "7.11.0",
+    "uuid": "8.3.2",
+    "yargs": "17.4.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "1.0.2",
+    "@types/uuid": "8.3.4",
+    "jest": "28.0.3",
+    "pino-pretty": "7.6.1",
+    "typescript": "4.6.4"
+  }
+}

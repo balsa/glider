@@ -1,0 +1,63 @@
+import {
+  createConnection as createMysqlConnection,
+  Connection,
+} from 'mysql2/promise';
+import { v4 as uuidv4 } from 'uuid';
+
+import { Destination } from '../types';
+
+function getTableName(source: string, stream: string): string {
+  return `${source}_${stream}`;
+}
+
+export class MysqlDestination implements Destination {
+  name = 'mysql';
+
+  private connection!: Connection;
+
+  async open(): Promise<void> {
+    this.connection = await createMysqlConnection({
+      host: 'host.docker.internal',
+      user: 'root',
+      database: 'glider',
+    });
+  }
+
+  async close(): Promise<void> {
+    await this.connection.end();
+  }
+
+  async write(
+    jobId: string,
+    source: string,
+    stream: string,
+    records: unknown[],
+    retrievedAt: number
+  ): Promise<void> {
+    const tableName = getTableName(source, stream);
+    await this.ensureTable(tableName);
+
+    for (const record of records) {
+      await this.connection.query(
+        `
+        INSERT INTO ${this.connection.escapeId(
+          tableName
+        )} (id, job_id, data, retreived_at)
+        VALUES (?, ?, ?, ?)
+        `,
+        [uuidv4(), jobId, JSON.stringify(record), new Date(retrievedAt)]
+      );
+    }
+  }
+
+  async ensureTable(name: string): Promise<void> {
+    await this.connection.query(`
+      CREATE TABLE IF NOT EXISTS ${this.connection.escapeId(name)} (
+        id VARCHAR(36) PRIMARY KEY,
+        job_id VARCHAR(36) NOT NULL,
+        data JSON,
+        retreived_at DATETIME(3)
+      )
+    `);
+  }
+}
