@@ -104,10 +104,6 @@ export class Job {
     context: unknown,
     callback: (records: unknown[]) => void
   ): Promise<void> {
-    this.logger.info({
-      msg: `Starting stream '${stream.name}'`,
-    });
-
     if (stream.parent) {
       await this.readStream(stream.parent, {}, async (records: unknown[]) => {
         for (const record of records) {
@@ -126,6 +122,10 @@ export class Job {
   ): Promise<void> {
     const headers = getHeaders(this.source);
     const transform = stream.transform ?? defaultTransform;
+
+    this.logger.info({
+      msg: `Starting stream '${stream.name}'`,
+    });
 
     let url = getSeed(stream, context);
     while (url) {
