@@ -136,6 +136,7 @@ export class Job {
         url,
         body: response.body,
         headers: response.headers,
+        statusCode: response.statusCode,
       };
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
