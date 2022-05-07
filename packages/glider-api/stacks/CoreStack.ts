@@ -61,7 +61,8 @@ export default class CoreStack extends sst.Stack {
 
     api.attachPermissions([table, queue]);
 
-    new Worker(this, 'Worker');
+    // FIXME(ptr): this construct isn't fully implemented
+    // new Worker(this, 'Worker');
 
     // Show the endpoint in the output
     this.addOutputs({
