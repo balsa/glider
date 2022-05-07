@@ -38,7 +38,7 @@ function getNextPageUrl(header?: string | string[]): string | null {
 
 class GitHubStream {
   // GitHub's maximum allowed page size is 100 (default: 30)
-  pageSize = 10;
+  pageSize = 30;
 
   constructor(readonly name: string) {}
 
