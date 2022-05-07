@@ -11,7 +11,7 @@
     "start": "docker run --rm glider-runner"
   },
   "dependencies": {
-    "got": "11.8.3",
+    "got": "12.0.4",
     "mysql2": "2.3.3",
     "pino": "7.11.0",
     "uuid": "8.3.2",
