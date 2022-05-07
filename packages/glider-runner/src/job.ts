@@ -151,6 +151,9 @@ export class Job {
         url = nextUrl;
       }
 
+      // NOTE(ptr): We only sleep when we are going to fetch another page. This
+      // means we have a risk of violating rate limits on the first request of
+      // the next stream, if it's part of this source.
       const spacing = getRequestSpacing(this.source, responseForSource);
       await sleep(spacing);
     }
