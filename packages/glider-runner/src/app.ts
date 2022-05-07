@@ -1,11 +1,10 @@
-import pino from 'pino';
-import { v4 as uuidv4 } from 'uuid';
-import yargs from 'yargs';
-
 import {
   createSourceRegistry,
   createDestinationRegistry,
 } from '@glider/connectors';
+import pino from 'pino';
+import { v4 as uuidv4 } from 'uuid';
+import yargs from 'yargs';
 
 import { Job } from './job';
 
