@@ -5,7 +5,6 @@ import type { Destination } from '../types';
 export class StdoutDestination implements Destination {
   name = 'stdout';
   logger = pino({
-    enabled: false,
     base: {
       destination: this.name,
     },
