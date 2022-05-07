@@ -42,7 +42,7 @@ abstract class GitHubStream implements Stream {
 
   constructor(readonly name: string) {}
 
-  abstract seed(context: any): string;
+  abstract seed(context: unknown): string;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next(response: Response, records: Timestamped[]) {
@@ -117,7 +117,7 @@ abstract class RepositoryStream extends GitHubStream {
     this.start = options.start;
   }
 
-  abstract seed(context: any): string;
+  abstract seed(context: unknown): string;
 
   next(response: Response, records: Timestamped[]): string | null {
     if (records.length === 0) {
