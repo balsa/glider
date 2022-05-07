@@ -1,0 +1,20 @@
+{
+  "extends": ["config:base"],
+  "labels": ["dependencies"],
+  "reviewers": ["paulrosania"],
+  "stabilityDays": 3,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchPackagePrefixes": ["@types/"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["node"],
+      "matchDatasources": ["docker"],
+      "allowedVersions": "/^\\d*[02468]\\./"
+    }
+  ]
+}
