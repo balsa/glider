@@ -36,12 +36,15 @@ function getNextPageUrl(header?: string | string[]): string | null {
   }
 }
 
-class GitHubStream {
+abstract class GitHubStream implements Stream {
   // GitHub's maximum allowed page size is 100 (default: 30)
   pageSize = 30;
 
   constructor(readonly name: string) {}
 
+  abstract seed(context: any): string;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next(response: Response, records: Timestamped[]) {
     return getNextPageUrl(response.headers['link']);
   }
@@ -101,7 +104,7 @@ interface Timestamped {
   updated_at: string;
 }
 
-class RepositoryStream extends GitHubStream {
+abstract class RepositoryStream extends GitHubStream {
   private start?: Date;
 
   constructor(
@@ -114,7 +117,9 @@ class RepositoryStream extends GitHubStream {
     this.start = options.start;
   }
 
-  next(response: Response, records: Timestamped[]) {
+  abstract seed(context: any): string;
+
+  next(response: Response, records: Timestamped[]): string | null {
     if (records.length === 0) {
       return null;
     }
@@ -149,7 +154,7 @@ class IssueCommentsStream
     super(parent, 'issue_comments', options);
   }
 
-  seed(context: RepositoryStreamContext) {
+  seed(context: RepositoryStreamContext): string {
     return `${context.url}/issues/comments?sort=updated&direction=desc&per_page=${this.pageSize}`;
   }
 }
