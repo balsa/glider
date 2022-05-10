@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "packages/glider-connectors" },
+    { "path": "packages/glider-plugin-atlassian-oauth" },
     { "path": "packages/glider-runner" }
   ]
 }
