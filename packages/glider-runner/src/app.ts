@@ -1,7 +1,3 @@
-import {
-  createSourceRegistry,
-  createDestinationRegistry,
-} from '@glider/connectors';
 import { CredentialsProvider } from 'glider';
 import pino from 'pino';
 import { v4 as uuidv4 } from 'uuid';
@@ -74,29 +70,26 @@ async function main() {
     },
   });
 
-  const sources = createSourceRegistry();
-  const destinations = createDestinationRegistry();
-
-  const source = sources.get(args.source);
-  if (!source) {
-    die({
-      msg: `Couldn't find source of type '${args.source}'`,
-    });
-  }
-
-  const destination = destinations.get(args.destination);
-  if (!destination) {
-    die({
-      msg: `Couldn't find destination of type '${args.destination}'`,
-    });
-  }
-
   const context = new InMemoryContext();
   const plugins = await loadPlugins(context);
   logger.info({
     msg: `Loaded ${plugins.length} plugins`,
     plugins,
   });
+
+  const source = context.sources.get(args.source);
+  if (!source) {
+    die({
+      msg: `Couldn't find source of type '${args.source}'`,
+    });
+  }
+
+  const destination = context.destinations.get(args.destination);
+  if (!destination) {
+    die({
+      msg: `Couldn't find destination of type '${args.destination}'`,
+    });
+  }
 
   function getCredentialsProvider(options: any): CredentialsProvider {
     if (options?.provider) {

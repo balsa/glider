@@ -1,11 +1,11 @@
+import { Response } from '@glider/connectors';
 import {
   Context as ConnectorContext,
   Destination,
   Source,
   Stream,
-  Response,
-} from '@glider/connectors';
-import { CredentialsProvider } from 'glider';
+  CredentialsProvider,
+} from 'glider';
 import got from 'got';
 import pino, { Logger } from 'pino';
 

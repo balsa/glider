@@ -2,7 +2,13 @@ import * as fs from 'fs/promises';
 import { join, dirname } from 'path';
 import { runInNewContext } from 'vm';
 
-import { Constructor, CredentialsProvider, PluginExports } from 'glider';
+import {
+  Constructor,
+  CredentialsProvider,
+  Source,
+  Destination,
+  PluginExports,
+} from 'glider';
 import pino from 'pino';
 
 import { Context } from './context';
@@ -42,8 +48,18 @@ async function loadPlugin(path: string, context: Context): Promise<Plugin> {
   // Inserting this object is one of the main motivations for using a VM.
   const glider = {
     credentials: {
-      registerProvider: (provider: Constructor<CredentialsProvider>) =>
-        context.credentials.register(manifest.name, provider),
+      registerProvider: (
+        id: string,
+        provider: Constructor<CredentialsProvider>
+      ) => context.credentials.register(id, provider),
+    },
+    sources: {
+      register: (id: string, constructor: Constructor<Source>) =>
+        context.sources.register(id, constructor),
+    },
+    destinations: {
+      register: (id: string, constructor: Constructor<Destination>) =>
+        context.destinations.register(id, constructor),
     },
   };
 
@@ -58,7 +74,6 @@ async function loadPlugin(path: string, context: Context): Promise<Plugin> {
     __filename: mainPath,
     __dirname: dirname(mainPath),
     console,
-    glider,
     global,
     module,
     require: (id: string) => {

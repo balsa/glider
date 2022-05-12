@@ -1,10 +1,9 @@
+import { Destination } from 'glider';
 import {
   createConnection as createMysqlConnection,
   Connection,
 } from 'mysql2/promise';
 import { v4 as uuidv4 } from 'uuid';
-
-import { Destination } from '../types';
 
 interface MysqlDestinationOptions {
   host: string;

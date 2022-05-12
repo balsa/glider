@@ -1,8 +1,7 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import dateFormat from 'dateformat';
+import { Destination } from 'glider';
 import { v4 as uuidv4 } from 'uuid';
-
-import { Destination } from '../types';
 
 interface S3DestinationOptions {
   bucketName: string;

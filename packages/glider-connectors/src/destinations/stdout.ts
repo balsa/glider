@@ -1,6 +1,5 @@
+import type { Destination } from 'glider';
 import pino from 'pino';
-
-import type { Destination } from '../types';
 
 export class StdoutDestination implements Destination {
   name = 'stdout';

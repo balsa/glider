@@ -1,7 +1,8 @@
+import type { Context, Source, Stream } from 'glider';
 import pino from 'pino';
 
 import parseLinkHeader from '../parseLinkHeader';
-import type { Context, Source, Stream, Response } from '../types';
+import type { Response } from '../types';
 
 interface Options {
   orgs: string[];
