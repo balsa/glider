@@ -1,4 +1,7 @@
+import type { CredentialsProvider } from 'glider';
+
 export interface Context<P = any> {
+  credentials: CredentialsProvider;
   parent?: P;
 }
 
@@ -25,7 +28,9 @@ export interface Stream<C = any> {
 
 export interface Source {
   name: string;
-  headers?: Record<string, string> | (() => Record<string, string>);
+  headers?:
+    | Record<string, string>
+    | ((context: Context) => Record<string, string>);
   requestSpacing?: number | ((response: Response) => number);
   streams: Stream[];
 }

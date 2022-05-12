@@ -3,6 +3,7 @@ import { S3Destination } from './destinations/s3';
 import { StdoutDestination } from './destinations/stdout';
 import { FigmaSource } from './sources/figma';
 import { GitHubSource } from './sources/github';
+import { JiraSource } from './sources/jira';
 import { Source, Destination } from './types';
 
 class Registry<T> {
@@ -30,6 +31,7 @@ export function createSourceRegistry(): Registry<Ctor<Source>> {
 
   registry.register('figma', FigmaSource);
   registry.register('github', GitHubSource);
+  registry.register('jira', JiraSource);
 
   return registry;
 }

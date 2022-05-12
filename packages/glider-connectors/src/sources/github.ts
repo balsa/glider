@@ -1,7 +1,7 @@
 import pino from 'pino';
 
 import parseLinkHeader from '../parseLinkHeader';
-import type { Source, Stream, Response } from '../types';
+import type { Context, Source, Stream, Response } from '../types';
 
 interface Options {
   orgs: string[];
@@ -231,10 +231,11 @@ export class GitHubSource implements Source {
     ];
   }
 
-  headers() {
+  headers(context: Context) {
+    const token = context.credentials;
     return {
       Accept: 'application/vnd.github.v3+json',
-      Authorization: `Bearer ${this.options.token}`,
+      Authorization: `Bearer ${token}`,
     };
   }
 

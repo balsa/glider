@@ -2,11 +2,14 @@ import {
   createSourceRegistry,
   createDestinationRegistry,
 } from '@glider/connectors';
+import { CredentialsProvider } from 'glider';
 import pino from 'pino';
 import { v4 as uuidv4 } from 'uuid';
 import yargs from 'yargs';
 
+import { InMemoryContext } from './context';
 import { Job } from './job';
+import { loadPlugins } from './plugins';
 
 const logger = pino();
 
@@ -34,6 +37,11 @@ async function main() {
       describe: 'JSON configuration object for the destination',
       requiresArg: true,
     })
+    .option('destination-credentials', {
+      coerce: JSON.parse,
+      describe: 'JSON configuration object for destination credentials',
+      requiresArg: true,
+    })
     .option('source', {
       alias: 's',
       describe: 'The source to read from',
@@ -44,6 +52,11 @@ async function main() {
     .option('source-options', {
       coerce: JSON.parse,
       describe: 'JSON configuration object for the source',
+      requiresArg: true,
+    })
+    .option('source-credentials', {
+      coerce: JSON.parse,
+      describe: 'JSON configuration object for source credentials',
       requiresArg: true,
     })
     .alias('h', 'help')
@@ -78,8 +91,45 @@ async function main() {
     });
   }
 
+  const context = new InMemoryContext();
+  const plugins = await loadPlugins(context);
+  logger.info({
+    msg: `Loaded ${plugins.length} plugins`,
+    plugins,
+  });
+
+  function getCredentialsProvider(options: any): CredentialsProvider {
+    if (options?.provider) {
+      const provider = context.credentials.get(options.provider);
+      if (!provider) {
+        die({
+          msg: `Couldn't find credentials provider '${options.provider}'`,
+        });
+      }
+
+      return new provider(options);
+    } else {
+      // If no provider is specified, pass credentials directly
+      return {
+        get() {
+          return options;
+        },
+      };
+    }
+  }
+
+  const sourceProvider = getCredentialsProvider(args.sourceCredentials);
+  const destinationProvider = getCredentialsProvider(
+    args.destinationCredentials
+  );
+
   const job = new Job({
     id: uuidv4(),
+    context,
+    credentials: {
+      [args.source]: sourceProvider,
+      [args.destination]: destinationProvider,
+    },
     source: new source(args.sourceOptions),
     destination: new destination(args.destinationOptions),
   });

@@ -1,11 +1,21 @@
-import { Destination, Source, Stream, Response } from '@glider/connectors';
+import {
+  Context as ConnectorContext,
+  Destination,
+  Source,
+  Stream,
+  Response,
+} from '@glider/connectors';
+import { CredentialsProvider } from 'glider';
 import got from 'got';
 import pino, { Logger } from 'pino';
 
+import { Context } from './context';
 import { sleep } from './utils';
 
 interface JobOptions {
   id: string;
+  context: Context;
+  credentials: Record<string, any>;
   source: Source;
   destination: Destination;
   logger?: Logger;
@@ -38,27 +48,22 @@ function getSeed(stream: Stream, context: unknown): string {
   }
 }
 
-function getHeaders(source: Source): Record<string, string> {
-  if (!source.headers) {
-    return {};
-  } else if (typeof source.headers === 'function') {
-    return source.headers();
-  } else {
-    return source.headers;
-  }
-}
-
 export class Job {
   readonly id: string;
 
   private readonly source: Source;
   private readonly destination: Destination;
+
+  private readonly context: Context;
+  private readonly credentials: Record<string, CredentialsProvider>;
   private readonly logger: Logger;
 
   constructor(private readonly options: JobOptions) {
     this.id = options.id;
     this.source = options.source;
     this.destination = options.destination;
+    this.context = options.context;
+    this.credentials = options.credentials;
     this.logger = options.logger ?? pino();
   }
 
@@ -120,7 +125,7 @@ export class Job {
     context: unknown,
     callback: (records: unknown[]) => void
   ): Promise<void> {
-    const headers = getHeaders(this.source);
+    const headers = await this.getHeaders();
     const transform = stream.transform ?? defaultTransform;
 
     this.logger.info({
@@ -150,6 +155,14 @@ export class Job {
         if (!nextUrl) break;
 
         url = nextUrl;
+      } else {
+        this.logger.warn({
+          msg: `Received ${response.statusCode} while fetching '${url}'`,
+          url,
+          headers,
+          statusCode: response.statusCode,
+          response: response.body,
+        });
       }
 
       // NOTE(ptr): We only sleep when we are going to fetch another page. This
@@ -162,5 +175,26 @@ export class Job {
     this.logger.info({
       msg: `Finished stream '${stream.name}'`,
     });
+  }
+
+  private async getSourceContext(): Promise<ConnectorContext> {
+    const credentials = await this.credentials[this.source.name]?.get();
+
+    return {
+      credentials,
+    };
+  }
+
+  private async getHeaders(): Promise<Record<string, string>> {
+    const source = this.source;
+    const sourceContext = await this.getSourceContext();
+
+    if (!source.headers) {
+      return {};
+    } else if (typeof source.headers === 'function') {
+      return source.headers(sourceContext);
+    } else {
+      return source.headers;
+    }
   }
 }
