@@ -16,7 +16,8 @@ module.exports = {
 
   rules: {
     'no-console': 'error',
-    'import/no-named-as-default': 0, // very noisy and not always desirable
+    'import/named': 'off',
+    'import/no-named-as-default': 'off', // very noisy and not always desirable
     'import/order': [
       'error',
       {
