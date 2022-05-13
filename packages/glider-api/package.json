@@ -24,7 +24,7 @@
     "@serverless-stack/resources": "0.69.7",
     "@tsconfig/node14": "1.0.1",
     "@types/aws-lambda": "8.10.95",
-    "@types/node": "14.18.16",
+    "@types/node": "14.18.18",
     "@types/uuid": "8.3.4",
     "aws-cdk-lib": "2.23.0",
     "pino-pretty": "7.6.1",
