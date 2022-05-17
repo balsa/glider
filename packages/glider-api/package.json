@@ -10,8 +10,7 @@
     "build": "sst build",
     "deploy": "sst deploy",
     "remove": "sst remove",
-    "start": "sst start",
-    "test": "jest"
+    "start": "sst start"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.92.0",
