@@ -1,4 +1,4 @@
-import { Api, App, StackContext, Table } from '@serverless-stack/resources';
+import { Api, StackContext, Table } from '@serverless-stack/resources';
 import { aws_dynamodb as dynamodb } from 'aws-cdk-lib';
 
 import { Worker } from '../constructs/Worker';
