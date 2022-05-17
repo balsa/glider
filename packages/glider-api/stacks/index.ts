@@ -1,6 +1,6 @@
 import * as sst from '@serverless-stack/resources';
 
-import CoreStack from './CoreStack';
+import { CoreStack } from './CoreStack';
 
 export default function main(app: sst.App): void {
   // Set default runtime for all functions
@@ -8,7 +8,7 @@ export default function main(app: sst.App): void {
     runtime: 'nodejs14.x',
   });
 
-  new CoreStack(app, 'core');
+  app.stack(CoreStack);
 
   // Add more stacks
 }
