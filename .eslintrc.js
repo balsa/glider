@@ -27,6 +27,17 @@ module.exports = {
         'newlines-between': 'always',
       },
     ],
+    'jest/expect-expect': [
+      'error',
+      {
+        assertFunctionNames: [
+          'expect',
+          '*.has*',
+          '*.resourceCountIs',
+          '*.templateMatches',
+        ],
+      },
+    ],
     '@typescript-eslint/prefer-nullish-coalescing': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     '@typescript-eslint/no-unused-vars': [
