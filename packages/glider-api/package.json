@@ -14,17 +14,16 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.86.0",
+    "@aws-sdk/client-s3": "3.92.0",
     "pino-lambda": "3.0.1",
     "uuid": "8.3.2",
-    "zod": "3.15.1"
+    "zod": "3.16.0"
   },
   "devDependencies": {
     "@serverless-stack/cli": "1.1.0",
     "@serverless-stack/resources": "1.1.0",
     "@tsconfig/node16": "1.0.2",
-    "@types/aws-lambda": "8.10.95",
-    "@types/node": "14.18.16",
+    "@types/aws-lambda": "8.10.97",
     "@types/uuid": "8.3.4",
     "aws-cdk-lib": "2.24.0",
     "pino-pretty": "7.6.1",
