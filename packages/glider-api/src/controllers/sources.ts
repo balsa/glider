@@ -1,19 +1,23 @@
 import { APIGatewayProxyHandlerV2 as Handler } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
-import pino from 'pino-lambda';
+import pino from 'pino';
+import { lambdaRequestTracker, pinoLambdaDestination } from 'pino-lambda';
 
 import { make400, make404 } from '../lambda';
 import { SourceStore } from '../stores/source';
 import { assertIsAWSError } from '../utils';
 
-const logger = pino();
+const withRequest = lambdaRequestTracker();
+const destination = pinoLambdaDestination();
+const logger = pino({}, destination);
+
 const store = new SourceStore({
   client: new DynamoDB.DocumentClient({ apiVersion: '2012-11-05' }),
   tableName: 'paul-glider-Table',
 });
 
 export const list: Handler = async (event, context) => {
-  logger.withRequest(event, context);
+  withRequest(event, context);
 
   const sources = await store.getAll();
 
@@ -25,7 +29,7 @@ export const list: Handler = async (event, context) => {
 };
 
 export const create: Handler = async (event, context) => {
-  logger.withRequest(event, context);
+  withRequest(event, context);
 
   const result = await store.create({
     provider: 'asana',
@@ -45,7 +49,7 @@ export const create: Handler = async (event, context) => {
 };
 
 export const get: Handler = async (event, context) => {
-  logger.withRequest(event, context);
+  withRequest(event, context);
 
   const id = event.pathParameters?.id;
   if (!id) {
@@ -69,7 +73,7 @@ export const get: Handler = async (event, context) => {
 };
 
 export const update: Handler = async (event, context) => {
-  logger.withRequest(event, context);
+  withRequest(event, context);
 
   const id = event.pathParameters?.id;
   if (!id) {
@@ -123,7 +127,7 @@ export const update: Handler = async (event, context) => {
 };
 
 export const destroy: Handler = async (event, context) => {
-  logger.withRequest(event, context);
+  withRequest(event, context);
 
   const id = event.pathParameters?.id;
   if (!id) {
