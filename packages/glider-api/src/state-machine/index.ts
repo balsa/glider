@@ -1,4 +1,4 @@
-import { DynamoDB } from 'aws-sdk';
+import { DynamoDB, StepFunctions } from 'aws-sdk';
 import pino from 'pino';
 import { lambdaRequestTracker, pinoLambdaDestination } from 'pino-lambda';
 
@@ -65,4 +65,17 @@ export const invokeSelf: Handler = async (event, context) => {
   logger.info({
     msg: 'Invoking another execution of the state machine',
   });
+
+  const sfn = new StepFunctions({
+    apiVersion: '2016-11-23',
+  });
+
+  const connectionId = 'TODO';
+
+  await sfn
+    .startExecution({
+      stateMachineArn: context.StateMachine.Arn,
+      input: JSON.stringify({ connectionId }),
+    })
+    .promise();
 };
