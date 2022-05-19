@@ -28,8 +28,8 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@babel/core": "7.17.12",
-    "@babel/preset-env": "7.17.12",
+    "@babel/core": "7.18.0",
+    "@babel/preset-env": "7.18.0",
     "@babel/preset-typescript": "7.17.12",
     "@tsconfig/node16": "1.0.2",
     "@types/jest": "27.5.1",
