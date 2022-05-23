@@ -21,8 +21,8 @@
     "zod": "3.16.0"
   },
   "devDependencies": {
-    "@serverless-stack/cli": "1.1.1",
-    "@serverless-stack/resources": "1.1.1",
+    "@serverless-stack/cli": "1.2.1",
+    "@serverless-stack/resources": "1.2.1",
     "@tsconfig/node16": "1.0.2",
     "@types/aws-lambda": "8.10.97",
     "@types/uuid": "8.3.4",
