@@ -11,7 +11,7 @@
     "start": "docker run --rm --mount type=bind,src=/Users/paul/Development/balsa/cloud/packages/glider-plugin,dst=/app/plugins/balsa glider-runner"
   },
   "dependencies": {
-    "got": "11.8.3",
+    "got": "11.8.5",
     "mysql2": "2.3.3",
     "pino": "7.11.0",
     "uuid": "8.3.2",
