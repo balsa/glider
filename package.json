@@ -37,7 +37,7 @@
     "@typescript-eslint/eslint-plugin": "5.25.0",
     "@typescript-eslint/parser": "5.25.0",
     "babel-jest": "28.1.0",
-    "esbuild": "0.14.39",
+    "esbuild": "0.14.42",
     "eslint-config-prettier": "8.5.0",
     "eslint-import-resolver-typescript": "2.7.1",
     "eslint-plugin-import": "2.26.0",
