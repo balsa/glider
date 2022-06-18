@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@balsahq/glider": "0.1.0",
+    "@balsahq/glider-aws": "0.1.0",
+    "@balsahq/glider-connectors": "0.1.0",
+    "@balsahq/glider-runner": "0.1.0"
+  },
+  "changesets": [
+    "new-kangaroos-end",
+    "silent-apricots-admire",
+    "tricky-pets-deny"
+  ]
+}
