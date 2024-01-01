@@ -34,6 +34,6 @@
     "@types/better-sqlite3": "^7.6.4",
     "@types/dateformat": "^5.0.0",
     "@types/uuid": "^9.0.0",
-    "pino-pretty": "^9.1.1"
+    "pino-pretty": "^10.0.0"
   }
 }

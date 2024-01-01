@@ -57,6 +57,6 @@
     "@types/aws-lambda": "8.10.111",
     "@types/uuid": "9.0.1",
     "aws-cdk": "2.66.1",
-    "pino-pretty": "9.4.0"
+    "pino-pretty": "10.3.1"
   }
 }

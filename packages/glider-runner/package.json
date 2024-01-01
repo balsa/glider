@@ -41,6 +41,6 @@
     "@balsahq/glider": "*",
     "@types/uuid": "9.0.1",
     "@types/yauzl": "2.10.0",
-    "pino-pretty": "9.4.0"
+    "pino-pretty": "10.3.1"
   }
 }
